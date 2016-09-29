@@ -1,3 +1,3 @@
 #!/bin/sh
 
-zip -r dell-persistence.pivotal metadata/ releases/
+zip -r persistence-storage.pivotal metadata/ releases/
