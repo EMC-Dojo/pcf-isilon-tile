@@ -1,0 +1,262 @@
+---
+name: Dell-Persistence
+product_version: "2.0.0"
+minimum_version_for_upgrade:  "1.0.0"
+metadata_version: "1.7"
+label: 'Isilon'
+description: Service broker that enable Isilon as persistence service for PCF
+rank: 91
+stemcell_criteria:
+  os: ubuntu-trusty
+  version: "3262.12"
+  enable_patch_security_updates: true
+  requires_cpi: false
+
+releases:
+- name: emc-persistence-release
+  file: emc-persistence-release-0+dev.23.tgz
+  version: 'latest'
+- name: routing
+  file: routing-0.138.0+dev.4.tgz
+  version: 'latest'
+
+post_deploy_errands:
+- name: register-broker
+pre_delete_errands:
+- name: deregister-broker
+
+icon_image: iVBORw0KGgoAAAANSUhEUgAAANIAAAB2CAYAAAC9FM26AAAgAElEQVR4Ae2dCXBd13mYfxDLw8O+7wABAgQJkuAiSqRk7attSdaSupYTT6aZZtokzbSTdppxk7FnsrSJs9RuPUmmM51p3Y5r13FtK4plSZao3aYkiuK+gSRI7MT6Ht7D9rB2vgNe4L5zzwMeiLeA0P1nMLjvLuec+9/zn3//T8rCwsKCuOBiwMXAujCwZV1Puw+7GHAxoDDgEpI7EVwMxAADLiHFAIluEy4GXEJy54CLgRhgwCWkGCDRbcLFgEtI7hxwMRADDLiEFAMkuk24GHAJyZ0DLgZigAGXkGKARLcJFwMuIblzwMVADDDgElIMkOg24WIgbbOgYHZe5EYgJJ2+kLQPT0rvaEhGxmdlzhZKmJGaIlX5HqkrzJSGYv68kp0Ru7UkGJpT/Xf7pqTTNyV9gWnhnB2KstKkIs8jTSVe1X9lXoakxm4I9q7c4wRiIOV2D1qdnluQy4OTcqZ3TDpHpmRkIpx4IuEyK32L1Bd75WBtruwoyxJPWkqkW1c975uclTO943L+xrj0jYZkYmZ+1WdSU0SKstOluTRL7q7Pk/K8DLn1EazanXtDnDFw2xISc/XK4IR8cD0g7UOTMgVLugWAS+2qyJZHdxRJRW76mlqAgE73jMuxzoAMjc2Ecb9oG4J4IKj7t+XLnXV56yLoaPt074s9Bm5LQhoan5X32/1ysntMxqfDRadbRVF1vkee2l0s20u9qzYxvyByoX9C3mrzSbc/dEsEpHcCQUNIjzYXSl5mqn7Z/b3BMXBbEdLcgsj5vnF5s80nvYGQMKFXgtSUFMn3pkqOJ00y0xYVkfmFBRkLzYl/ctbBxUpz0uWZ1lLZWRaZmHju3auj8klXMCoipt/czFTJ86RJ6pYUQX6bnp2XwNSsBKbmZNb2ElzeU5kjX9hTIgVel5hW+rYb7dptQ0ih2QV576pfftE+KmMrcKFF4kmTxhKvNJV6pSwnXbI9qTZCEkUAo5OzyiCAaDYwNr00obn/+X2lyhigfywMGa9fHJG2gQmJJEgiqnnStkh1gUfpXnA6CCnHkyppUIqIoNdBzINj03Kxf0IuD0yo37TJLQdr8+QLe4rFm+5aIfRvsFF/3xaExMr92sUROdEdlBnYkgGYgJV5HtlbnSP7q3Mk35smKPSrwVhoXrV79Pqo0nNovb4oU750oEzgUADnLg1MyE/PDstAcFr9NrWLAQPDxf6aXGUVjIYQUO2wMB69Nipn+sYlNDsvLAaPNBfK4zsLXQOECdEb8NyGJ6SBsRn5+YURZZWLxAXyM9PkcH2eHKjJlZLstVv0IZTe0Wl57cKwtA1MCuIf7T2zp0TSU1PkZM+Y/OzcsGBcMAGcprbAIw80FUhzWZag76wVQnMLSud7s21EWR7hYBBzS3nWWpty708CBjY0IfUHZ+QfTg/KlaFJIxdgvjaWZsljzYVSX5y57tUbn8/PL47IRx0BSd+SIs/uLZWM1C3y0tlBpc+Yvk9ORqrc05Av9zTkSa5n/XoNot6rF0akZzSkuNpX7qyQfNf4YEL9hjq3YQnJNzErPz49qHQIE8ZY9Q9tzZOHthfGdKKNT8/Ly+eG5OPOoORlpsmCLEQkovLcDHliZ5HsrsyOSow0vYfpHFzxR6cGBBw8ubtYHmoqMN3mnttAGNiQ2iyc4RUlZk0YUYUu8rldxfL5XcUxJSI6I9LhsR1FUlvokdGbljV9EAhuGDNeuKNM9lbFlojoq7nMK59tKVZGi2MdAUG8dWFjY2DDERK6Av6ZU91jRvN2gTdNnm0tlXsb8m9JF4nmc4yH5mQyQnQCRIRB4Yv7S5VeFE17t3LP3qocpacRqXG2d/xWmnCfSSAGNhQh4VJ5/6pfRSuYDAuF3jR5prVE7qjNUWbieOCJifvy+WEZNHABi4ie21cqJdlri4JY61hxe927LV/FBp7tG5PRqdg4ntc6Dvf+6DCwoQjp3I1xef/qqMzYnJTWayDOoY+0VmZbp2L+Hy70xqURFXJkahyLHIRcnLV2y6CpvdXOsXBATIQfdYxMrXa7ez2JGNgwhNQbmJYjl3xGZysOzsd3FsmB2ty4ourD6wE50T1mtBBi3n56T8mSbymuA7E1jhhZW5gpp3rMoq7tVvcwiRjYEIQ0Nbsgb1/2KcekjgtM3PfU5yl94RbcM3pzEX9fGZyU99tHlyIc9BtbKrLXHNSqt3ErvzF+7K/JkZHxGRkad40Ot4LDRDyzIQjpeFdQpSHoMQvoJERmP7i9UPl14oUQ9I/XL/mUlU7vg1i5hqJMlR5BaE8yACL2pG+Rbl8oGd27fUaBgaQTEtHTv2z3GzkBSW+IdDkxTL7TcQJpEJ5zfWRSvyQgB18VZnb8S8THJQN4/23FXhWomxxSTsZb3159JpWQMHW/fdlv9JMQp/ZIc5FATPGE9qEp+bAjYDS1by/LUmE/dUWZUpydLj3+5HGEHeVZKmIdgnZh42EgqYR0pmdMLvQ7fSQEoJKbs6sivnFmTMp3r/qNnIb4vYdvRk2gm9UUeIwm8UR9UszthC2NTZnj/RI1DrcfMwaSRkjDEyTnjaqUAn1opB7c35ivAkb1a7H8TXo6KRE6EIR6d0OebCvJXLq0tShT/JMzRs61dFMcDzA6kEnr+pPiiOR1NJ0UQkLOJzGuL+AUlVDu728sEHwo8QQiuUlTtyfWWf1tLcyUu+rywoJgiajADL9SLpT1fLz+U7iFsCUXNh4GkkJIfaPTipB0vytWOvKJCAKNJ0DIxzuDciMw7egGxy/pEHrENURUkJUuwSRGGJTnpsvE9JzRz+V4EfdEQjGQcEJiEpOmYPKJsOof3poXtxg6C7MQ0CfdQWOtBYjYVLeBkB1KaU3OJMdyx9hzPWkyPbsgtgpj1iu5/5OMgYQTUpcvpMpWmd77YF2u1BV6TJdidg5CJnrBFEtXnJWucotI5jOBlSpuupaIc2mpKaowSrL8WYl4x9u1j4QSEv5M0sVNmaYVuRmyvzq+IUB8JJIFMTLoAOnAjai1EAnIWiUNPFmANROunUyumKx33+j9JpSQEKkopKgDkxNuhA4QbzjZHZRhQ6gN5mUsdSshBEKCjnTdLt5jttqHhHMz02QqQoqHdZ/7P/EYWGnexHw0cCPKUOkAAe2rztFPx/w39fBI5Ua8swMTlIDY1VIjvOmpsiUlJWmExJizMrZELABjfyf3OLEYiK+N2fYuZHleMkxibtlXnRt3czf9XLgxbgyMLclJlz2V2WHmbtvQlw4xODCRkyjdCTUiqCPhwsbCQMIIidpt1I/TgZJXLXGOYKDPiel5Od3rTJGAG1F/m/oL0cBqXCuaNtZzD4aQSMaQ9bTrPrs+DCRkaSNhDt3IpFu0lGfHPZ4OFFGJyOg3ykhVZbxQ5F1wMXCrGEgIIV0fmVI1svVBorzH2/lKnxRhvNg/7ihRzDWqsVbmR8eN9PG7v10MWBiIu2iHYs92J6E5Z9QyexSxV1G8Aefv1SFnqrYndYtKXTcVdMRXMxAMyTxs1OJWCyI5mWlSlBWddXFiZk7O9wWlc2RCekenZGpmTjBY1BdnyZ1bC6U8N7KpHZwQDuSfmFnWyRhKikhxdoZkZZhr6FGptT/oDL0qyspQZZNvFdfgo60/KJcHxtS7YIIniLaywCvbS3Nkd9XqjnRQOTQ+LZPTc8vvJCL53nQhSFgH7h8cCykrpaWX8ilKcjyOcs5YMo9eGZBzvT4JzcxLRtoW2VmZL5/ZXibZGc629b7W+zvuPTCJTfUG8HlSKedmbfv1vseKz7Pti2/CmV1akZchDSXmgvlMmt/9vyfFNzEtKTcpaV4W5Pl9VfK1J1tWjL7o8U/JS6d75cVTfdI2EBTf+LSKMJ+bX1BFWwqyMqSlIld+58Ft8k8OVC/VJddf4vvHuuTbb12R9C2LggM19jB///HTu+SxnWX67er3kUuD8gcvnl2ss6zKLS+oSfW1z7fIc/sqjc+sdJIcrFfO3ZDvHeuSc70BtbiMhWbFepdsT5qU5GTI4foi+TePNMk9DUURmxsen5bf/9Fp+aTTr6yf3Mg7PbuvSv7kC7uW1iurgR7/pPy7/3daLt4Iqvu5NzM9Vf7mhf1yqL7Quk2uDY3Jf37lrPT4x+VAXbFUFmTJQGBS/u7IBfn7j67J7z/ZKs3leUv3x+Mg7oREJIMpioBd66hFEG+gVjhVeEwmb4qZ5EWojkpM2/k+9j0KN5AcrCtUJY2X2VT4G7xzeUi+9tI5+fDaiNFMzSo7Mj4tv7g6LOf6AjIzOy+/cc/W8EZu/mofGpcLfcGwa1UFmZIewWrHOx5tH5bT3aNhz0B8Zatwv7AHbv5oGxiTb7x2SX50okcChnLNvEtwalb9XRuakFM9o/K3X94vDzeXmpqTobGQ/PxCv9wYDeeYlfmZSn/WA0rg4txv77s8zyPFOcui+GAwJH/4w48lIy1Vfv0zTYrr46IozM6QB3ZUKEL66g+OyTd/7bA0lMTPxRJXHYlJjG5iirBGrEtENR4MDP3BcGLgK5M4SGGRSDA2vbjq6tcRkSKFCr12YUD+1fdPyPtXho1EpLeF2PZf37oi7UPOVA5ENAhOB0QbJooJeOaj6yOOS9UFXtlaHPldHQ8oV0FQ/vUPTsr/PNoRNpFN91rnIPo/+dlF6fY7xWjuudgflGFtYeI8u3IEJp0SAwsZhGqH1up8KfAuE9L3PriqiOc/ffGgvHvphnznvctyvtcvf//hNfn26+flN+7bLvlZGfLf375kbybmx3ElJMSCa8NOpKpJXB7fCG8LU1jrxgwR2+QXsd1kJOgPhGTaoNeRE6T2OdIePNsbUGILOtFaALHlyKUBxyP0jQilQ1rqFlW/QT/PbybplQFn5Aj6S15mdHod7TCx/8OLZ+Xn5weWRERTf6Zzv7w6LMc7fKZLSqQzLarByRmld9kfIpzsWIfPEaC7pypP7TTCvcPjIXn7Yp88f3CrVOR7ZWJ6Vg42lMjXn9kvf/XlQ9I1Mq4I9IXD2+Slk5325mN+HFfRrsM3pcL+9VGXZqfL1jgHp9In1Ym6fFPGvYwoOZy5wr6x/onlPZPs40dG1/kBiu7fvtMuZ3oD9luFIFM+/P1NJUphfvXcDenyhdeG4NkLfeHP0QgKuS5Wch4jA8YGE5zs9otv0snFWquiL/CPePidox1KL9L7qCn0yn2NxbK1OFv6RifltfP9woJjBzZR+7jTJ8/sqwzDEwSEyGmKXA+GZuVGYEp2Vy7HWtKOLqKiKrZU5C1JBKMTMypj+NC2UmW8gFO/39Yvf/7TU3JjdFKKsj1SV5ytOJal59rHGsvjuBISxeBNkcrsIJGZgE20MDB0GeoskDTIRswrAZYvPqYONQXO55g4/3i6N2z1Rvp6bl+V/OWvtCorHfrE//moU37vh6fEp8X6YR3EwpeVvmyJw/dmEu2IaohkhULnsusTjB0876xYnqD6++i/rw6Oy/eOdcrMbLhW2VyeI3/z5f3ySHOZMKEhiP/y5hX56k/OyKxWXQmLHtftEig7zl8bdnJL+kfEva6uLetWHSMTgrHBDmW5mdJUtizJYHxYWFiQFHtHiKV9fnn3Ur/8j9+8TxrLcuVMty9sLPY2Y3UcN9HOPzlnNMNiat4Wgy1YokEA+pE+sXiOQiarFVXhI+qrJ5OSbTR1ePfykGCpswOr99efbJGG4iy1MqNIP7C9ROoKnbqKmrLh81bGp2elPxjeJu3Tf5GBI1GdFjERa5odqgrYuTB6Jfu9K0OCmGqH9LQU+c176+XxnWWCnWNRTxPFbU3hSiYdEisopmwToNv1jYa/K/oRqf12qMrPlOay5UUh35shud50OX59SH0r9rV6pKVS/uqFQ3JXQ4lc6F00ulwfGlNGHXtbsT52zooY9YC/YHjcKeOX5mQIf/EGphNmb52nMAnwXZl8R9aY2OAZLqEDE7hQ8yGhDH9wzangH6ovkh3l4RM4My1VaouylO5VnpupzMa091hLuaRrfgC4kUm0w2plmqgDgZBcGXCmh8BBG6MkJCb0L9uHHRwGA8vnd1fo6JBRVcMinHBhDrWFWY7a7JcgJIPRx2oUQsI4ZYU/KULSXBb432oKli29+JPubiyTFz/pUASUtmWLStasKcyS3354p/zZT09Ja02h/Ph4h3yutcbqKi7/40ZIlK4y7TiO76YwAbWzEY06DWIdH4pohpWACazL/txfmMXYwxcBRDJ8RTpU5mU6jBL4W779pX2Ka8BZ0Hdw0FqTx94GTlydu3AdwjCFM6FjXB50EhIiGTlM0QAm/5Nd4aZznmssyZatRU5OiiipG2TgULooqVwQvQHj+1jj4n3RlXB2g9MLN8Jxiji5v9a5T9Q/u7dJPrw6KH/60kl5uKVSmivyVZOP7KqUbt+4fOu1s4KB5g+f3mt1FZf/0WF4jV2DOPxHOrCSwg1ME0G/d72/2evVVLoKDlC2SoAq/g6TWMWz+CfswLuaTLrI+OgOdu7BMaJeNHCpn1rf4as9k6m+eFlHsLeD/qETPwS6r8Y5+ezP2Y8hxkVdxX5W5EBdgXi1SAokyFPdozKvsfzGsmxF7PYWRiamlU/Ofk4/hiON3yQk3gMx1Q4Q6AHDu2Ct+8Y/vVO+8fJp+e7Rq3JPY6mc6BiWPv+EfHx9SAqzPfLVp/bK9tvRITs1O6+2brQjgmN0DMzOiQD0owlDAhyp7JHCa6xxYWjQZXau4TjEkWwHREWTORx/zkcdPnmgqdh+e1THTFK4nEZHKju3ocRJSNz/0XWnqRgL477qxRU6mo4/7vQbpQiIkXAgO3T7J1Xok/0cx+gwFXnh35iIBhaGlYD2LHN/f2BKrmrclWiQHeXL+pG9reaKPPnWrx1WutKxa0PS659QetxvPbRT7tpW4pAi7M/G6jguHIkMVJNYV5CZtmryXCxejHWczZVNPgsIYTWDYbdvQsVr6WOpyveGmXS5TnUhHJ46N+D3N99ok53lB1flgHo/6F1tholHOE5TqZOQZubm5WSXX29G0KdMhOe48eaJ091+ZXa3X4cLE0unA9Y902LTXLa4o7z9fnS3oXGnhGK/B8udpRMi1umOWEKqGEskIF4PQwN/fP9wso/0VOzOx8Vq1xeYNnr2awo9Rn0gdq+z2BIVVFkFdaDUFvlPKwGimklPgJu2VjvjtfK86XLPNjPXeeVcv3zjtYvGSq4rjYHQIJPpGz2F/nTAMMIzOuytpqxYdGsleomJa6DgVxc6dUqscDohZXtSZVelE0cnuvwOAwbBvwSWWjC3sCCdvsXsZe7XjI+yl4iGFQjJaof/iSYi+lx+E/tI1nmMWGXiBhQ41CSEdfZkfhylmZ33dGBz5dUshlOzc4JjUwdPeqrRjIz176k9FVJq0LvwQ/23967Jt45cNnJovQ/rN0RhCrLFjM3Kq4PJVMw9+2ryVZCrfr/pd9fIpKDX6YDFr04zNLDYYGjQgbHhgLYDBAFh2MVURGEcu/b4PwwrcDlwxv12QDckOsOub9qvb4TjmBNSaHZB7eWjvxwiUKKySyni6DcEWeZ501a1GLLKmiYURBjJH4N/yGQeBgdEKPzl623yzTcuC+blaODCjYAyLev3tlTmGjkMfh9EIzugB+6MoFPY77OOsZrxZwdM2VjgPFo0KXU39CgOnivJ9sj2snAxEH+czi0R0R5qLg3TVSE0+ude3RGLzoXIuJEh5oQUCM0ay/pSuZQo5EQAKe0m03FZTrpoc8IxHFZDkxOX1d3EDWggOyNV/v3jzYoDOBoUUdbDv36jTf7XBx1GTm1/hkmKNUwHREsTIRMOiE6hv29FfqZsM+hTervWb0znOjGik/HeOpBactHAkbDu6YYcxEXdJ4c/7sHtpcr0b2+72zcpp3tGHQsxroTmNSwK9jYTdRx7QpqcMwaJsgrpZYDj9ZLsbhduOBZFQNFwxOMd7E7hFAv31zgniX38xLP9xa+0Rpy8EOcfv3xBXj3fb3/McUxagImQEIN0/wwP9wUmHaZizhMFsM1g4XN0KKI4Je+tA5VdW6uchAThOmqQp4jcUVvgEL+wPur6KsYZREBd3yMIlcj50alw7sqCsFoSpD72RP+OOSHhVDMVmietnKjveAMyOZsX67BlS4raIVw/b/9NSMpZw0qLUoyyu5p+90RLmfzRUy3KWmZv1zru9U/Jn796yRHpbF3nf/vwuHSMOA0HhPpgudIB6+AVzVTMPXCvtWTynupxEhLGDUz+OsC1Q7PhpZtxLKPH2AE9GX+QHosHl4PD6oROQO9bbYNhMYvoR9Hg3t5vMo5jPrPRTXRDA1YU4tsSARCSY7UUUSFBq4mWKLso7jowoZqikNF5z68cqpO/eL7VOAFpF//S//4gckj/O21DRosnHNE0/qtD444YNqLOD9ZF74iFwDsNOxYuTvjlQFrGD34/6fQ5HLHKuqcF9GIw0Y0SGBru2lqoOFdtoTcsmBQRUI+EJ4nxjtrlbFj922yU37EnJIO1DGtLtGbY9SIGix0OYR0KvOmSsULaBPfz0bt84Qo35/HFECYTDcC1fv1wnfzZc3vUfkb6M6zOPzvb5why5T58b0evDYdZuDgP/u7ZVuQw6yK+4j/Sowsw7NxRF/3kQy8hSFYH6kroMYlwDT0VhOfggLqzGl1Kz/DF4GOZyBHx7IHbGBwgVDuU5nhkR8XGNjQw3pgTkqmSKitkIuLreKFAaM64oudlpjq88/YPxjacRy4OOCYlhEF9AKx20QLPfOVQrfzug41Gv9nJ7lGjZZDATt3CRZ+luR45YIgzwwz9iWYq5n4iz1ntowWIcULbHxeDgCnYlfGRAq4D1joWKztARLp+hCWRYFOAcUbK9rXa2V2ZF5YRa53faP9jTkhB7YPwwqyoa5mI60ESHEmXyWkPsShSrQOuDwSm5Gi7M4obyxXm7bUCITX/8v4GVS1IfxZjhonzkV2K5UqHO+oKpDrfSRikJSCO6sDki2Rh1O8lsRAC1gFRzUSMhO4QwmMHHLGmUCSInKgLOxDmQ/AugDXOlIZhvx+9K1pHrP25RB/HnJDGDYSEXIyxIREwOT3v0NHolyInNke6YygouT2jzknMhDJZrmgAUYy4PPSUPm1ycZ1I7Sd2latEOL1DPQQGTv7ulSHjIvCZbcVGMRHrHhWKdNhTlR/1wnX9pu9Gb4P3hmPYgZwnxF+7c5XrWN/2aFEf6MmIjGH3pojsqMhdqprE4mYyZlh9EnSLgWU1l4V1fzL/Ry+vRDlKE0fCz2IK7IyyyTXdhn6k+1RoQPdv2Bvlo5Ocp4s33PPozrKwqjU4VX9wvFsZJdAVUJBZob+wt1L+6OldDvGRlZpVd8qmyGCUKNcCO3FGUllIB/SOuyOUuEIx15PfsIZFCu7U2+Y3nFF3xKKM0QbbkNqBaHqIQ4eyHI9DDFQZsVrYUqE3XVps/iBSSXC2mrgqfSDSRmPk0ceTjN8xJySTok+M22qm41i9PESkK6xMB3tcl94XRQ9NyXl8aByH9shnJu7XXzrvmHxwDYfzCp1tatYxHvQPJpAd3mwbdAS+ch09hRJgOsAdTI5YAmvJQYoWrgyOy6gWBcLCZ3LEwn3PGAiJPCF7mjx9Xx4IOhyxxTmeMM5FyjyBtZEA39FGj2iwxh6+5FhnY/zfk84ODokJJURkIgDSDuhGK/mwPrw+oqqI2p/hmJAcXcmnad2Hwr2IeXr+kOJ0V4YctR8QvWpsNf149h9P9Tk4KSh7vKVsqWqOfXw4blkAdKDunSlaW7+P34zvkpb3w3lPGtVgnVbKdy4POoiOMd7fVOwwqlATT49oQOeyp9qjW5EpHAlYRFYS/SI9l4zzMedIploIBKsmSs5FF2NnCTsHRLSKREg4jymAiAVMB7jM1qJwPUG/x/qNf+ja8ITsvMkNmKRUSn35TJ91i/qPiAtxoGhbgEhnEpmoFvTkHmeKN8/BHYjA1gECoA+I0wRYyRD/WNbg3kEtioBnMBDokd3E81FdSC8IA/e7uyE8+h1cnu1xZsSqyAfbRMAIVRaBI+GIZRFLzPJrwtTazsWckP753VWOEXjSUsImtuOGGJ44WJd3szD/8idg1YykI53o9MsHBmsd/o5nDSV+MeUzwfX8I+R8yvF+6WCNIHYdu+6TH5/ocazKhPlQptgCCI6SwPrqzXUI2RRfx7VrQ+MyoBcTSWG3dp/8i+8et5oP+4/Ii+/m9x5tkjpMz1tSBKukDkSnUGGVCAtERUzeL57qVdVj7feC12daqxy1KRB/dUcshIEIuPxVFltCxMW/xybTdqBMsy4N2K9vtGMnFtc5wgJvYqxzkYZJrbrMtOhei4lFjW4KtehALWuiCXRAbzrcUKSK49uvsbr/9MwNFeJCuxTM1yRMJaL920ebwiYekxRC0gGn6md3lxuT2ZhycECb/WLx8QVKUQUdTlB72/c1FS8Fi6L7KcMEs9s+jxdEEQ2hQHAvLLEmAw5O4t96oEG5N+x9LGbEhnNLzPGmWEEIO8eTLiOz4d8AQ0PjGoJu7f0n4zghOlIyXiyaPvGfkHwXNonwe6WmqMLupoxMLFnP7682mqPpk0lH6oRORIiWv/Ngo/zqXbVhQ3v1XL+xOirRFJFSMxCdTMmHYQ1H+IE52Z6TdW9jcUSdCjGOYFsTEUEUf/rMbmPEBxmxeh0LOCvWPR0IxjVJC7RP9aLbBT7VhAQR6UU2+HCs0o/sWC5WqH9MdoIgps6uh+n3WL8Rf1Cy/+Oze+QPPrsjzLqFifj7H3cZJ+pTrRWqsKTVjv0/5nZTBIT9HtMxlkvEKztgnWNXDBT/aIBFBuPCSsXyTY5YwoJM+hDmfayEOqiIhtuIkKKTgfS3XOG3b2I2YeFApmFQmJJ9XvUYMf1exA+qoyK7U67JDjhRTZHW1j1wF7Z2wXz7nQ86ZCA4FSZmQTwo/PiKyJ4l9g5fEMq1Hd5uG1SWNyY4zyhYWPSffPFAtf0DBjQAAAkGSURBVEOfsJ7FIkZqeNhz1sVI/xcWozt0cZVuf/v+baqvv3unXVURQm+zc1SGDY6IN/zVQ7Xqfeq1rFl7twT+on/Z3QYQhu6X4hmqp1LYBAJVvsaFRYmAiG/NjWXvYsMdpyxQ8zWGcLZvXG1sHMMm19RUtz+k9IrsjHDi0BtBIf7wms9Rl42Pub8mX+Xz6M/ov3HOYs164+LA0gZciCqITqzAEA9WtEgWQ/xAmLB11wAxa0RIo5+YgKquWPmY8GsBFpf7mkqMHIC2cDDjmKZtSnMhnpFmjgkazgU321qYpaqtrtTvL9tH1BYu1ntBiJj8TRZQ3oAcJLUP1c3VhAWHb3C7mL7BRcwJ6VTPmOyrjt4huNIHuZVrbYOTyvydqCTCWxmj+8zmw4B5yVvHe7IDRLJBD5RM9njc/jc/BmJOSEiKFEBJFmA2NlUQStZ43H4/HRiIubEBsZ34stXqx8ULvTkZqUK5YkjZ0t+tvgheoFQYXn/7Ne5FEa4uiH8EBtVfe0dDYcq8NT5qSiQqb8vq0/0fGwzEnJDQF0k3TxYhYbFjA2gI2haNorBFYf/vHrshvslZByEd3ponz+WXOqkvNnheauXdK355q80X5rqCkFkAXjhY5hLSEqZur4OYi3ZYhpjIyQICVLES+bWUdzY8e7+dHe0WU6qZvNZfcVa6HNpKAcL4jpptOD/uDKqtZqy++Q/sqsiW7aXRFdi/+Yj7bwNhIOZTh2gAwvJNQaCJeG9cQgSp9mpbMmJNPN834RgCCNhfkyO1cd6Kk21m3r86aizMUpSVJofq8xwc1DFY98SGxUDMCYm9eHDKUjshGYDuk+9Nk17b3kjUIn/vql9CWtoz40Mvurs+P0zUi/W44TofdQTk0oCTkBE/4YbskuHC7YuBuBASTk12y0sWsP/RwNiMjIXm1R62b132CcSkAwaGe7cVSLwDbduHp+QX7WYHan2RV+6sy4srIevv7f6OPQZiTkjoJ2W56XJ9ZEoMKT6xfwNDi9RnYCe5Tt+U4gTn+pwFQnhsb1WOtFY5E9gMTd7yKXSyNy6OLOlm9obIHL6vMT9hFWjtfbvHscVAzK12DK+h2CvoJJiaq/MTH8FL6a2K3Ax5/dKIUFDftLM6yX8PNBWsGpO3HnTjT3v7sl+uGrgzCw6caGd5fAl5PeN3n40eAzHnSHRNsXqsd20GnSD6oa3vzqLsdEXIpqqrcIJHmwulPDe8Dtv6egx/GvP70eujcrwrGGbqtu5qLPEqQo63pdDqz/0fXwzEhZAI0mwqzZJPuoJCNHaiAXEKcc6UR4MxAk7QWhXfeEA4MtzItJVLoTdNHmkudEW6RE+MOPYXF0JivNuKvULxweNdAeOKHK93CkzNySvnhhU3tHw09r52lGXJg9vZNcF+NrbHF/sn5LULI8a6CYQwPbS9UOBILmweDMRtOmHOxbR8rCOo9nNNBMowub98blhO944ZibcqL0M+t6tYFYuM13iw0DGGYW3jL/pDL7qrLlfurMt1rXTx+gBJajduhESVzAO1uUIhDczP8Y4KV0R0dlhO9gSN1kIMEE/sLIqb8QPud/7GhLx4elBuBJ2mdkTK1socJdKhP7qwuTAQN0ICTc2lXmXBQ1851hFwFEqMFSoHx2bkJ6cGlaUwUq4b0Q5UBooHYOY/0T0mPzk9aPRX0SfhP5/bVSS5UaZ0x2Ocbpvxw0BcCQmjA6JMakqKHGnzKZ+OSW+51dejLeLXfvDJgJCZqxeGpF21k3l2uor/Q28h6iKWwA7qRy755KUzQ8Z9a+mrpsCjiCiaHQNjOTa3rcRhIK6ExGvsKM+WXZVZSvFmIqMzReIaa3ltREVi1354YkA6fOG7I1jtQESP7yySZ1pLlF6EOf4fzgzFLF+pd3RaiXJvtvmMhgXGUZ3vkef3lkptgRsCZH2Xzfg/5qnmJiT1jE6r9AWiwkkXwJt/uD5fclapq2Bqiz3Erg9Pyvvto8oyRzFGE1hE9JmGxT1Q4YhwDrhWQ1GmPNFSLI0lmbek9GPSP9M7JkevjcowKRuGAbBC1RdnylO7S9w4OgN+NtuphBASSPuwIygvnx2Sydl5VV1mR3mWMMmZbPZqM5EQTHRCx8iU0oPO3xgX064X1rNEUz+2o0juqMldKtRB3N0PTw4IzwIE1x6szZWDdbmCyLWa+g+5YlpH3zvRHRSKrEQqPoJ1joiFp/cUS2mCtvy03t39nxwMJIyQ4CRH2kbkrTa/4gpMXAoD4k/Bt1OZnyHsok35Wq6hwLNpGCkZWMEu9U9It29KyDA186DFnDz0kSd3UerX6achZAlRsPNmZDgTng2L91Rmy7YS71L1IatsFsQ7FpqTkYkZRcT4h+BAkQiIT4ifiGjuB5sKXIdrcuZ0UnpNGCHxdhDBq+eH5VhnMGwyMqHZY5Zd/ZiIACIYhIRxgOiASMRjYQ2uRl7Rw9sLV8zO7fKH5MenBhVHsZ7lPyZpymBRhH+ZkOZV2jzxepFESKsNiJ8Npx9oLFBczjVxW5j5dPxPKCGB0kUjgV/lB0FY6wUmcGW+R+5tyJe91TlC7e/VAGJ65fywCiaNoGKt1kTYdW/aFmmpyJb7G/OVE3r1EYQ97v7YBBhIOCGBM/LrTvaMybtXfEpsu5XJDBdDFLwDPac2d80BqMTjUT8B/w+cbzWOp39riIXqoFsLM+Xu+sUobnbdcOHTiYGkEJKFaspmfXg9IOgeA2PTYeKedY/+H9GPFAmMFeg2JPHdaqAAehspDh93BlQiIgaM1QgKwZN0esKf6J9xYCF04dONgaQSEqhn4hKZcG14Si4PTEiXf0pGJ+fCnKtMVAgGX0xDiVf5ZrDMxQpCcwvSOTIlVwYnVUJiXyAk1FiwwNLhIJ76okypL/YKG6q5epCFIfd/0gnJ/QQuBjYDBlyZZDN8Rfcdko4Bl5CS/gncAWwGDLiEtBm+ovsOSceAS0hJ/wTuADYDBlxC2gxf0X2HpGPAJaSkfwJ3AJsBAy4hbYav6L5D0jHgElLSP4E7gM2AAZeQNsNXdN8h6RhwCSnpn8AdwGbAgEtIm+Eruu+QdAy4hJT0T+AOYDNg4P8DbbfDMIE1dQgAAAAASUVORK5CYII=
+
+form_types:
+  - name: Dell_broker
+    label: Service Broker Application
+    description: Service Broker configuration
+    property_inputs:
+      - reference: .dell-persistence.service_broker_port
+        label: Dell Persistent Broker port
+        description: Dell Service Broker port
+      - reference: .dell-persistence.service_broker_skip_cert_verify
+        label: Skip certificate checking
+        description: Skip certificate checking when making connection
+      - reference: .dell-persistence.libstorage_uri
+        label: Libstorage Server URI
+        description: The server that is in charge of managing persistence
+
+job_types:
+- name: compilation
+  resource_label: compilation
+  static_ip: 1
+  dynamic_ip: 0
+  max_in_flight: 1
+  single_az_only: false
+  instance_definition:
+    name: instances
+    type: integer
+    configurable: true
+    default: 1
+  resource_definitions:
+    - name: ram
+      type: integer
+      configurable: true
+      default: 1024
+    - name: ephemeral_disk
+      type: integer
+      configurable: true
+      default: 2048
+    - name: persistent_disk
+      type: integer
+      configurable: true
+      default: 0
+    - name: cpu
+      type: integer
+      configurable: true
+      default: 1
+  property_blueprints: []
+
+- name: dell-persistence
+  resource_label: Service Broker
+  templates:
+  - name: persistent-broker
+    release: emc-persistence-release
+  - name: route_registrar
+    release: routing
+  static_ip: 1
+  dynamic_ip: 0
+  max_in_flight: 1
+  single_az_only: true
+  instance_definition:
+    name: instances
+    type: integer
+    configurable: true
+    default: 1
+  resource_definitions:
+  - name: ram
+    type: integer
+    configurable: true
+    default: 1024
+  - name: ephemeral_disk
+    type: integer
+    configurable: true
+    default: 2048
+  - name: cpu
+    type: integer
+    configurable: true
+    default: 1
+  - name: persistent_disk
+    type: integer
+    configurable: false
+    default: 0
+  property_blueprints:
+  - name: service_broker_credentials
+    type: simple_credentials
+    label: Basic Auth Credentials
+    default:
+      identity: dell-persistence
+  - name: service_broker_port
+    type: integer
+    default: 5000
+    configurable: true
+  - name: libstorage_uri
+    type: string
+    default: "10.1.1.0:7981"
+    configurable: true
+  - name: service_broker_skip_cert_verify
+    type: boolean
+    configurable: true
+    default: false
+  manifest: |
+    persistent-broker:
+      cf:
+        username: (( ..cf.uaa.system_services_credentials.identity ))
+        password: (( ..cf.uaa.system_services_credentials.password ))
+        domain: (( ..cf.cloud_controller.system_domain.value ))
+        skip_cert_verify: (( service_broker_skip_cert_verify.value ))
+      broker:
+        password: (( service_broker_credentials.password ))
+        username: (( service_broker_credentials.identity ))
+        port: (( service_broker_port.value ))
+        service_name: Isilon
+        service_uuid: 7d288d4f-4f0f-4ee5-a9ad-ea84057ab782
+      diego_driver: rexray_isilon
+      insecure: (( service_broker_skip_cert_verify.value ))
+      libstorage_service: isilonservice
+      libstorage_uri: (( libstorage_uri.value ))
+    nats:
+      user: (( ..cf.nats.credentials.identity ))
+      password: (( ..cf.nats.credentials.password ))
+      port: 4222
+      machines: (( ..cf.nats.ips ))
+    route_registrar:
+      routes:
+        port: (( service_broker_port.value ))
+        uris:
+        - "dell-persistence.(( ..cf.cloud_controller.system_domain.value ))"
+
+- name: register-broker
+  resource_label: Broker Registrar
+  templates:
+  - name: register-broker
+    release: emc-persistence-release
+  errand: true
+  max_in_flight: 1
+  single_az_only: false
+  resource_definitions:
+  - name: ram
+    type: integer
+    label: RAM
+    configurable: true
+    default: 2048
+    constraints:
+      min: 1024
+  - name: ephemeral_disk
+    type: integer
+    label: Ephemeral Disk
+    configurable: true
+    default: 2048
+    constraints:
+      min: 1024
+  - name: persistent_disk
+    type: integer
+    label: Persistent Disk
+    configurable: false
+    default: 0
+  - name: cpu
+    type: integer
+    label: CPU
+    configurable: true
+    default: 1
+    constraints:
+      min: 1
+      power_of_two: true
+  static_ip: 0
+  dynamic_ip: 1
+  instance_definition:
+    name: register-errand
+    type: integer
+    configurable: false
+    default: 1
+  property_blueprints: []
+  manifest: |
+    persistent-broker:
+      cf:
+        domain: (( ..cf.cloud_controller.system_domain.value ))
+        username: (( ..cf.uaa.admin_credentials.identity ))
+        password: (( ..cf.uaa.admin_credentials.password ))
+        skip_cert_verify: (( ..cf.ha_proxy.skip_cert_verify.value ))
+      broker:
+        password: (( .dell-persistence.service_broker_credentials.password ))
+        username: (( .dell-persistence.service_broker_credentials.identity ))
+        host: "dell-persistence.(( ..cf.cloud_controller.system_domain.value ))"
+        service_name: Isilon
+
+- name: deregister-broker
+  resource_label: Broker Deregistrar
+  templates:
+  - name: deregister-broker
+    release: emc-persistence-release
+  errand: true
+  max_in_flight: 1
+  single_az_only: false
+  resource_definitions:
+  - name: ram
+    type: integer
+    label: RAM
+    configurable: true
+    default: 2048
+    constraints:
+      min: 1024
+  - name: ephemeral_disk
+    type: integer
+    label: Ephemeral Disk
+    configurable: true
+    default: 2048
+    constraints:
+      min: 1024
+  - name: persistent_disk
+    type: integer
+    label: Persistent Disk
+    configurable: false
+    default: 0
+  - name: cpu
+    type: integer
+    label: CPU
+    configurable: true
+    default: 1
+    constraints:
+      min: 1
+      power_of_two: true
+  static_ip: 0
+  dynamic_ip: 1
+  instance_definition:
+    name: deregister-errand
+    type: integer
+    configurable: false
+    default: 1
+  property_blueprints: []
+  manifest: |
+    persistent-broker:
+      cf:
+        domain: (( ..cf.cloud_controller.system_domain.value ))
+        username: (( ..cf.uaa.admin_credentials.identity ))
+        password: (( ..cf.uaa.admin_credentials.password ))
+        skip_cert_verify: (( ..cf.ha_proxy.skip_cert_verify.value ))
