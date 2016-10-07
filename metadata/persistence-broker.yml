@@ -14,10 +14,13 @@ stemcell_criteria:
 
 releases:
 - name: emc-persistence-release
-  file: emc-persistence-release-0+dev.23.tgz
+  file: emc-persistence-release-0+dev.41.tgz
+  version: 'latest'
+- name: libstorage
+  file: libstorage-0+dev.2.tgz
   version: 'latest'
 - name: routing
-  file: routing-0.138.0+dev.4.tgz
+  file: routing-0.139.0+dev.1.tgz
   version: 'latest'
 
 post_deploy_errands:
@@ -32,16 +35,36 @@ form_types:
     label: Isilon
     description: Service Broker configuration
     property_inputs:
-      - reference: .persistent-storage.service_broker_port
-        label: Dell Persistent Broker port
-        description: Dell Service Broker port
-      - reference: .persistent-storage.service_broker_skip_cert_verify
-        label: Skip certificate checking
-        description: Skip certificate checking when making connection
-      - reference: .persistent-storage.libstorage_uri
-        label: Libstorage Server URI
-        description: The server that is in charge of managing persistence
-
+    - reference: .persistent-storage.service_broker_skip_cert_verify
+      label: Skip certificate checking
+      description: Skip certificate checking when making connection
+    - reference: .persistent-storage.service_broker_port
+      label: Dell Persistent Broker port
+      description: Dell Service Broker port
+    - reference: .persistent-storage.isilon_service_name
+      label: Isilon Service Name
+      description: Name for the name as seen in Cloud Foundry
+    - reference: .persistent-storage.isilon_endpoint
+      label: Isilon Endpoint
+      description: URI for Isilon cluster to use with this service broker.
+    - reference: .persistent-storage.isilon_username
+      label: Isilon Username
+      description: Username to sign into OneFS with this service broker.
+    - reference: .persistent-storage.isilon_password
+      label: Isilon Password
+      description: Password to sign into OneFS with this service broker.
+    - reference: .persistent-storage.isilon_volume_path
+      label: Isilon Volume Path
+      description: Root of file path for volumes in Isilon.
+    - reference: .persistent-storage.isilon_nfs_host
+      label: Isilon NFS Host
+      description: Host of Isilon NFS
+    - reference: .persistent-storage.isilon_datasubnet
+      label: Isilon Data Subnet
+      description: Subnet for Isilon Data
+    - reference: .persistent-storage.isilon_quotas
+      label: Quotas
+      description: Enforce Isilon data quotas
 job_types:
 - name: compilation
   resource_label: compilation
@@ -78,6 +101,8 @@ job_types:
   templates:
   - name: persistent-broker
     release: emc-persistence-release
+  - name: libstorage
+    release: libstorage
   - name: route_registrar
     release: routing
   static_ip: 1
@@ -116,16 +141,47 @@ job_types:
     type: integer
     default: 5000
     configurable: true
-  - name: libstorage_uri
-    type: string
-    default: "10.1.1.0:7981"
-    configurable: true
   - name: service_broker_skip_cert_verify
     type: boolean
     configurable: true
     default: false
+  - name: isilon_service_name
+    type: string
+    default: "isilonservice"
+    configurable: true
+  - name: isilon_endpoint
+    type: string
+    default: "https://10.1.3.3:8080"
+    configurable: true
+  - name: isilon_username
+    type: string
+    default: "username"
+    configurable: true
+  - name: isilon_password
+    type: string
+    default: "password"
+    configurable: true
+  - name: isilon_volume_path
+    type: string
+    default: "/rexray"
+    configurable: true
+  - name: isilon_nfs_host
+    type: string
+    default: "10.1.3.3"
+    configurable: true
+  - name: isilon_datasubnet
+    type: string
+    default: "10.100.0.0/16"
+    configurable: true
+  - name: isilon_quotas
+    type: boolean
+    default: false
+    configurable: true
   manifest: |
     persistent-broker:
+      diego_driver: rexray_isilon
+      insecure: (( service_broker_skip_cert_verify.value ))
+      libstorage_uri: localhost:7981
       cf:
         username: (( ..cf.uaa.system_services_credentials.identity ))
         password: (( ..cf.uaa.system_services_credentials.password ))
@@ -135,12 +191,24 @@ job_types:
         password: (( service_broker_credentials.password ))
         username: (( service_broker_credentials.identity ))
         port: (( service_broker_port.value ))
-        service_name: Isilon
-        service_uuid: 7d288d4f-4f0f-4ee5-a9ad-ea84057ab782
-      diego_driver: rexray_isilon
-      insecure: (( service_broker_skip_cert_verify.value ))
-      libstorage_service: isilonservice
-      libstorage_uri: (( libstorage_uri.value ))
+        services:
+        - name: persistent-storage
+          id: 7d288d4f-4f0f-4ee5-a9ad-ea84057ab782
+          description: "Support Isilon and Scaleio Arrays in Cloud Foundry"
+          requires: ["volume_mount"]
+          metadata:
+            displayName: "persistent-broker"
+            documentationUrl: "docsURL"
+            imageUrl: "imageURL"
+            longDescription: "longDescription"
+            providerDisplayName: "Dell EMC"
+            supportUrl: "supportUrl"
+          plans:
+          - name: (( isilon_service_name.value ))
+            description: An isilon service
+            metadata:
+              bullets:
+              - Isilon Service provided by EMC Dojo
     nats:
       user: (( ..cf.nats.credentials.identity ))
       password: (( ..cf.nats.credentials.password ))
@@ -148,9 +216,31 @@ job_types:
       machines: (( ..cf.nats.ips ))
     route_registrar:
       routes:
+      - name: persist-broker
+        registration_interval: 10s
         port: (( service_broker_port.value ))
         uris:
         - "persistent-storage.(( ..cf.cloud_controller.system_domain.value ))"
+    libstorage: |
+      libstorage:
+        logging:
+          level: debug
+        client:
+          type: controller
+        host: tcp://0.0.0.0:7981
+        server:
+          services:
+            (( isilon_service_name.value )):
+              driver: isilon
+              isilon:
+                endpoint: (( isilon_endpoint.value ))
+                insecure: (( service_broker_skip_cert_verify.value ))
+                username: (( isilon_username.value ))
+                password: (( isilon_password.value ))
+                volumePath: (( isilon_volume_path.value ))
+                nfsHost: (( isilon_nfs_host.value ))
+                dataSubnet: (( isilon_datasubnet.value ))
+                quotas: (( isilon_quotas.value ))
 
 - name: register-broker
   resource_label: Broker Registrar
@@ -207,7 +297,7 @@ job_types:
         password: (( .persistent-storage.service_broker_credentials.password ))
         username: (( .persistent-storage.service_broker_credentials.identity ))
         host: "persistent-storage.(( ..cf.cloud_controller.system_domain.value ))"
-        service_name: Isilon
+        service_name: persistent-storage
 
 - name: deregister-broker
   resource_label: Broker Deregistrar

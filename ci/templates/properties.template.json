@@ -1,0 +1,25 @@
+{
+  "properties": {
+    ".persistent-storage.isilon_endpoint": {
+      "value": "https://{{ isilon_endpoint }}:{{ isilon_port }}"
+    },
+    ".persistent-storage.isilon_username": {
+      "value": "{{ isilon_username }}"
+    },
+    ".persistent-storage.service_broker_skip_cert_verify": {
+      "value": {{ skip_cert_verify }}
+    },
+    ".persistent-storage.isilon_quotas": {
+      "value": false
+    },
+    ".persistent-storage.service_broker_port": {
+      "value": {{ port }}
+    },
+    ".persistent-storage.isilon_nfs_host": {
+      "value": "{{ isilon_endpoint }}"
+    },
+    ".persistent-storage.isilon_password": {
+      "value": "{{ isilon_password }}"
+    }
+  }
+}
