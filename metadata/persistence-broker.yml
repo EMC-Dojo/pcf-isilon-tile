@@ -14,10 +14,10 @@ stemcell_criteria:
 
 releases:
 - name: emc-persistence-release
-  file: emc-persistence-release-0+dev.41.tgz
+  file: emc-persistence-release-0+dev.1.tgz
   version: 'latest'
-- name: libstorage
-  file: libstorage-0+dev.2.tgz
+- name: libstorage-release
+  file: libstorage-release-2+dev.1.tgz
   version: 'latest'
 - name: routing
   file: routing-0.139.0+dev.1.tgz
@@ -102,7 +102,7 @@ job_types:
   - name: persistent-broker
     release: emc-persistence-release
   - name: libstorage
-    release: libstorage
+    release: libstorage-release
   - name: route_registrar
     release: routing
   static_ip: 1
