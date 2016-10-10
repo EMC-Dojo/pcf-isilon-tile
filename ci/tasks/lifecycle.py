@@ -4,6 +4,7 @@ from jinja2 import Environment, FileSystemLoader
 import unittest
 import os
 import urllib
+import create_tile
 
 class Test(unittest.TestCase):
     def setUp(self):
@@ -25,6 +26,7 @@ class Test(unittest.TestCase):
         self.ops_client = opsman_client.OpsmanClient(
             ops_host, ops_user, ops_password, ops_client_id, ops_client_secret
         )
+        create_tile.main()
 
     def tearDown(self):
         prod_id = self.ops_client.get_deployed_product_id_by_name(self.product_name)
