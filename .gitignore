@@ -1,2 +1,8 @@
 persistence-storage.pivotal
+ci/tasks/__pycache__/
+ci/tasks/create_tile.pyc
+ci/tasks/opsman_client.pyc
+releases/cf-routing-release-0.140.0.tgz
+releases/emc-persistence-release-3.tgz
+releases/libstorage-release-3.tgz
 

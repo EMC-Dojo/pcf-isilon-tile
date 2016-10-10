@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 import os
-import boto3
+import boto
 import requests
 import shutil
 from jinja2 import Environment, FileSystemLoader
@@ -9,21 +9,22 @@ from subprocess import call
 import zipfile
 
 def main():
-    aws_client = boto3.client(
-        's3',
+    conn = boto.connect_s3(
         aws_access_key_id=os.environ['AWS_ACCESS_KEY'],
         aws_secret_access_key=os.environ['AWS_SECRET_KEY']
     )
     libstorage_release_name=os.environ['LIBSTORAGE_RELEASE_NAME']
     persistence_release_name=os.environ['PERSISTENCE_RELEASE_NAME']
     routing_release_name=os.environ['ROUTING_RELEASE_NAME']
-    download_s3_file(aws_client, 'libstorage', libstorage_release_name, libstorage_release_name)
+    download_s3_file(conn, 'libstorage', libstorage_release_name, libstorage_release_name)
     download_file(os.environ['PERSISTENCE_URI'], persistence_release_name)
     download_file(os.environ["ROUTING_URI"], routing_release_name)
     build_tile(libstorage_release_name, persistence_release_name, routing_release_name)
 
 def download_s3_file(client, bucket, bucket_file, file_name):
-    client.download_file(bucket, bucket_file, "releases/{}".format(file_name))
+    bucket = client.get_bucket(bucket)
+    key = bucket.get_key(bucket_file)
+    key.get_contents_to_filename("releases/{}".format(file_name))
 
 def download_file(release_uri, release_name):
     print("Downloading {}".format(release_name))
@@ -35,12 +36,10 @@ def download_file(release_uri, release_name):
 
 def build_zip_file(zip_name, filelist):
     cwd = os.getcwd()
-    zf = zipfile.ZipFile(zip_name, mode='w')
-    try:
+
+    with zipfile.ZipFile(zip_name, 'w') as zf:
         for f in filelist:
             zf.write(f)
-    finally:
-        zf.close()
 
     return os.path.join(cwd, zip_name)
 
