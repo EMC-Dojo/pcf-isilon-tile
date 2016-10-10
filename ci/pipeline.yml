@@ -64,6 +64,7 @@ jobs:
       inputs:
       - name: persistence-tile
       - name: release-version
+      - name: promote
       params:
         <<: *lifecycle
         GITHUB_EMAIL:  {{github_email}}

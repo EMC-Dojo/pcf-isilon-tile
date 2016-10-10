@@ -9,7 +9,7 @@ echo ${integer_version} > promote/integer_version
 
 cp -r ${REPO_NAME} promote/${REPO_NAME}
 pushd promote/${REPO_NAME}
-  ./create_tile.py
+  ./ci/tasks/create_tile.py
   mv persistence-storage.pivotal ../persistence-storage-${integer_version}.pivotal
 
   git config --global user.email ${GITHUB_EMAIL}
