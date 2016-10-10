@@ -92,6 +92,28 @@ class OpsmanClient:
         products = self.list_staged_products()
         return self.find_product_guid_by_name(products, product_name)
 
+    def update_product_networks(self, product_guid, az, network):
+        headers = self.get_headers()
+        headers["Content-Type"] = "application/json"
+        r = requests.put(
+            self.api_uri("/api/v0/staged/products/{}/networks_and_azs".format(product_guid)),
+            verify=False,
+            headers=headers,
+            data = json.dumps({
+                "networks_and_azs": {
+                    "singleton_availability_zone": {
+                      "name": az
+                    },
+                    "other_availability_zones": [
+                      { "name": az },
+                    ],
+                    "network": {
+                      "name": network
+                    }
+                  }
+            })
+        )
+
     def delete_staged_product(self, product_guid):
         print("Deleting staged product")
         headers = self.get_headers()

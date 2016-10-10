@@ -41,6 +41,7 @@ class Test(unittest.TestCase):
             self.ops_client.stage_product(self.product_name, self.product_version)
             prod_id = self.ops_client.get_staged_product_id_by_name(self.product_name)
             prod_properties = self.generate_isilon_tile_properties()
+            self.ops_client.update_product_networks(prod_id, "az1", "PCF-Private")
             self.ops_client.fill_staged_product_properties(prod_id, prod_properties)
             install_id = self.ops_client.apply_change()
             self.ops_client.wait_for_installation(install_id)
