@@ -10,6 +10,7 @@ jobs:
   plan:
   - aggregate:
     - {trigger: true,         get: persistence-tile}
+    - {trigger: false,        get: release-version, params: {bump: major}}
   - task: lifecycle
     docker-image: &docker
       platform: linux
@@ -24,7 +25,7 @@ jobs:
       - name: persistence-tile
       outputs:
       - name: promote
-      params:
+      params: &lifecycle
         AWS_ACCESS_KEY: {{aws_access_key}}
         AWS_SECRET_KEY: {{aws_secret_key}}
         BROKER_PORT: {{broker_port}}
@@ -50,6 +51,31 @@ jobs:
       run:
         path: persistence-tile/ci/tasks/lifecycle.py
 
+  - task: ship-release
+    docker-image: &docker
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: {{docker_repo}}
+          insecure_registries: [{{docker_registry}}]
+    config:
+      <<: *docker
+      inputs:
+      - name: persistence-tile
+      - name: release-version
+      params:
+        <<: *lifecycle
+        GITHUB_EMAIL:  {{github_email}}
+        GITHUB_USER: {{github_user}}
+        VERSION_FILE: release-version/number
+      run:
+        path: persistence-tile/ci/tasks/promote.sh
+  - put: final-release
+    params: {file: promote/persistence-storage-*.pivotal}
+  - put: persistence-tile
+    params: {repository: promote/persistence-tile, rebase: true, tag_prefix: "v", tag: promote/integer_version}
+
 resources:
 - name: persistence-tile
   type: git
@@ -59,3 +85,18 @@ resources:
     username: {{github_user}}
     password: {{github_password}}
     skip_ssl_verification: true
+
+- name: release-version
+  type: semver
+  source:
+    <<: *github-secrets
+    driver: git
+    file: ci/version
+
+- name: final-release
+  type: s3
+  source:
+    bucket: persistent-tile
+    regexp: persistence-storage-(.*).pivotal
+    access_key_id: {{aws_access_key}}
+    secret_access_key: {{aws_secret_key}}

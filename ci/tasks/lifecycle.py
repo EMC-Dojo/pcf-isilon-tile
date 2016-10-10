@@ -65,5 +65,6 @@ class Test(unittest.TestCase):
         template_folder='ci/templates'
         env = Environment(loader=FileSystemLoader(template_folder))
         return env.get_template(file_name)
+
 if __name__ == '__main__':
     unittest.main()
