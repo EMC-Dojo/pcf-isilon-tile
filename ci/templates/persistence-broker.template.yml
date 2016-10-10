@@ -14,13 +14,13 @@ stemcell_criteria:
 
 releases:
 - name: emc-persistence-release
-  file: emc-persistence-release-3.tgz
+  file: {{ persistence_release_name }}
   version: 'latest'
 - name: libstorage-release
-  file: libstorage-release-3.tgz
+  file: {{ libstorage_release_name }}
   version: 'latest'
 - name: routing
-  file: cf-routing-release-0.140.0.tgz
+  file: {{ routing_release_name }}
   version: 'latest'
 
 post_deploy_errands:

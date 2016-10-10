@@ -3,9 +3,11 @@ import opsman_client
 from jinja2 import Environment, FileSystemLoader
 import unittest
 import os
+import urllib
 
 class Test(unittest.TestCase):
     def setUp(self):
+        os.chdir('persistence-tile')
         ops_host = os.environ['OPSMAN_HOST']
         ops_user = os.environ['OPSMAN_USER']
         ops_password = os.environ['OPSMAN_PASSWORD']
@@ -27,15 +29,23 @@ class Test(unittest.TestCase):
     def tearDown(self):
         prod_id = self.ops_client.get_deployed_product_id_by_name(self.product_name)
         self.ops_client.delete_staged_product(prod_id)
+        install_id = self.ops_client.apply_change()
+        self.ops_client.wait_for_installation(install_id)
         self.ops_client.delete_available_product(self.product_name, self.product_version)
 
     def test_tile_lifecycle(self):
-        self.ops_client.upload_tile(self.tile_path)
-        self.ops_client.stage_product(self.product_name, self.product_version)
-        prod_id = self.ops_client.get_staged_product_id_by_name(self.product_name)
-        prod_properties = self.generate_isilon_tile_properties()
-        self.ops_client.fill_staged_product_properties(prod_id, prod_properties)
-        self.ops_client.apply_change()
+        try:
+            self.ops_client.upload_tile(self.tile_path)
+            self.ops_client.stage_product(self.product_name, self.product_version)
+            prod_id = self.ops_client.get_staged_product_id_by_name(self.product_name)
+            prod_properties = self.generate_isilon_tile_properties()
+            self.ops_client.fill_staged_product_properties(prod_id, prod_properties)
+            install_id = self.ops_client.apply_change()
+            self.ops_client.wait_for_installation(install_id)
+            self.assertEqual(self.ops_client.get_install_status(install_id), "succeeded")
+        except ValueError as e:
+            self.fail('get http error {}'.format(str(e)))
+
 
     def generate_isilon_tile_properties(self):
         template = self.get_template_file("properties.template.json")
@@ -53,6 +63,5 @@ class Test(unittest.TestCase):
         template_folder='ci/templates'
         env = Environment(loader=FileSystemLoader(template_folder))
         return env.get_template(file_name)
-
 if __name__ == '__main__':
     unittest.main()

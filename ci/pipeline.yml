@@ -1,0 +1,61 @@
+
+groups:
+- name: persistence-tile
+  jobs:
+  - lifecycle
+
+jobs:
+- name: lifecycle
+  serial: true
+  plan:
+  - aggregate:
+    - {trigger: true,         get: persistence-tile}
+  - task: lifecycle
+    docker-image: &docker
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: {{docker_repo}}
+          insecure_registries: [{{docker_registry}}]
+    config:
+      <<: *docker
+      inputs:
+      - name: persistence-tile
+      outputs:
+      - name: promote
+      params:
+        AWS_ACCESS_KEY: {{aws_access_key}}
+        AWS_SECRET_KEY: {{aws_secret_key}}
+        BROKER_PORT: {{broker_port}}
+        ISILON_ENDPOINT: {{isilon_endpoint}}
+        ISILON_PASSWORD: {{isilon_password}}
+        ISILON_PORT: {{isilon_port}}
+        ISILON_USERNAME: {{isilon_username}}
+        LIBSTORAGE_RELEASE_NAME: {{libstorage_release_name}}
+        LIBSTORAGE_URI: {{libstorage_uri}}
+        OPSMAN_CLIENT_ID: {{opsman_client_id}}
+        OPSMAN_CLIENT_SECRET: {{opsman_client_secret}}
+        OPSMAN_HOST: {{opsman_host}}
+        OPSMAN_PASSWORD: {{opsman_password}}
+        OPSMAN_PROD_NAME: {{opsman_prod_name}}
+        OPSMAN_PROD_VERSION: {{opsman_prod_version}}
+        OPSMAN_TILE_PATH: {{opsman_tile_path}}
+        OPSMAN_USER: {{opsman_user}}
+        PERSISTENCE_RELEASE_NAME: {{persistence_release_name}}
+        PERSISTENCE_URI: {{persistence_uri}}
+        ROUTING_RELEASE_NAME: {{routing_release_name}}
+        ROUTING_URI: {{routing_uri}}
+        SKIP_CERT_VERIFY: {{skip_cert_verify}}
+      run:
+        path: persistence-tile/ci/tasks/lifecycle
+
+resources:
+- name: persistence-tile
+  type: git
+  source: &github-secrets
+    uri: https://github.com/EMC-CMD/persistence-tile.git
+    branch: master
+    username: {{github_user}}
+    password: {{github_password}}
+    skip_ssl_verification: true
