@@ -16,10 +16,7 @@ pushd promote/${REPO_NAME}
   git config --global user.name ${GITHUB_USER}
   git config --global push.default simple
 
-  echo "## v${integer_version}" >> CHANGELOG.md
-  echo `git log -1 --abbrev-commit --pretty=oneline` >> CHANGELOG.md
   echo "${integer_version}.0.0" > ci/version
-  git add CHANGELOG.md
   git add ci/version
 
   git commit -m ":airplane: New final release v${integer_version}" -m "[ci skip]"
