@@ -6,6 +6,7 @@ import requests
 import shutil
 from jinja2 import Environment, FileSystemLoader
 from subprocess import call
+import zipfile
 
 def main():
     aws_client = boto3.client(
@@ -32,6 +33,17 @@ def download_file(release_uri, release_name):
             r.raw.decode_content = True
             shutil.copyfileobj(r.raw, f)
 
+def build_zip_file(zip_name, filelist):
+    cwd = os.getcwd()
+    zf = zipfile.ZipFile(zip_name, mode='w')
+    try:
+        for f in filelist:
+            zf.write(f)
+    finally:
+        zf.close()
+
+    return os.path.join(cwd, zip_name)
+
 def build_tile(libstorage_release_name, persistence_release_name, routing_release_name):
     template = get_template_file("persistence-broker.template.yml")
     rendered = template.render(
@@ -39,14 +51,16 @@ def build_tile(libstorage_release_name, persistence_release_name, routing_releas
         persistence_release_name=persistence_release_name,
         routing_release_name=routing_release_name
     )
-    cwd = os.getcwd()
     with open("metadata/persistence-broker.yml", 'w') as f:
         f.write(rendered)
 
-    tile_name='persistence-storage.pivotal'
-    call(['zip', '-r', tile_name, 'metadata/', 'releases/'])
-
-    return os.path.join(cwd, tile_name)
+    return build_zip_file('persistence-storage.pivotal',
+            [
+                'metadata/persistence-broker.yml',
+                'releases/{}'.format(libstorage_release_name),
+                'releases/{}'.format(persistence_release_name),
+                'releases/{}'.format(routing_release_name),
+            ])
 
 def get_template_file(file_name):
     template_folder='ci/templates'
