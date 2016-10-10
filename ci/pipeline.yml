@@ -48,7 +48,7 @@ jobs:
         ROUTING_URI: {{routing_uri}}
         SKIP_CERT_VERIFY: {{skip_cert_verify}}
       run:
-        path: persistence-tile/ci/tasks/lifecycle
+        path: persistence-tile/ci/tasks/lifecycle.py
 
 resources:
 - name: persistence-tile
