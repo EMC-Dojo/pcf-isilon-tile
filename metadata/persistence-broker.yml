@@ -157,8 +157,7 @@ job_types:
     default: "username"
     configurable: true
   - name: isilon_password
-    type: string
-    default: "password"
+    type: secret
     configurable: true
   - name: isilon_volume_path
     type: string
