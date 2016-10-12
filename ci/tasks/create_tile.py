@@ -22,6 +22,7 @@ def main():
     build_tile(libstorage_release_name, persistence_release_name, routing_release_name)
 
 def download_s3_file(client, bucket, bucket_file, file_name):
+    print("Downloading {}".format(bucket_file))
     bucket = client.get_bucket(bucket)
     key = bucket.get_key(bucket_file)
     key.get_contents_to_filename("releases/{}".format(file_name))

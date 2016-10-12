@@ -19,7 +19,7 @@
       "value": "{{ isilon_endpoint }}"
     },
     ".persistent-storage.isilon_password": {
-      "value": "{{ isilon_password }}"
+      "value": {"secret": "{{ isilon_password }}"}
     }
   }
 }
