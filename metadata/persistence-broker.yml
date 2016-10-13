@@ -194,6 +194,7 @@ job_types:
           id: 7d288d4f-4f0f-4ee5-a9ad-ea84057ab782
           description: "Support Isilon and Scaleio Arrays in Cloud Foundry"
           requires: ["volume_mount"]
+          bindable: true
           metadata:
             displayName: "Isilon"
             documentationUrl: "https://cloudfoundry.slack.com/"
