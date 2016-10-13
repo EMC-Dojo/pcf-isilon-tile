@@ -172,7 +172,7 @@ class OpsmanClient:
     def wait_for_installation(self, install_id):
         print('Wait for installation with id: {}'.format(install_id))
         while(self.is_installing(install_id)):
-            time.sleep(3)
+            time.sleep(15)
 
     def get_all_installation(self):
         headers = self.get_headers()
