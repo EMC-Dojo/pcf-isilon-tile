@@ -17,7 +17,7 @@ pushd promote/${REPO_NAME}
   git config --global push.default simple
 
   echo "${integer_version}.0.0" > ci/version
-  git add ci/version
+  git add .
 
   git commit -m ":airplane: New final release v${integer_version}" -m "[ci skip]"
 popd
