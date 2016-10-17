@@ -53,4 +53,4 @@ These values should be fine. Perhaps more instances will be useful, but for most
 
 Be sure to upload the [stemcell](http://bosh.cloudfoundry.org/stemcells) appropriate for your PCF Deployment.
 
-After following these steps, going back to the home page and pressing 'Apply Changes' should install our broker and allow for [rexray](https://github.com/EMC-Dojo/rexray-boshrelease) to mount volumes into containers. Check out our [documentation](http://cf-persist-service-broker.readthedocs.io/en/latest/Configuring%20PCF%20for%20Isilon/) for more on that!
+After following these steps, going back to the home page and pressing 'Apply Changes' should install our broker and allow for [rexray](https://github.com/EMC-Dojo/rexray-boshrelease) to mount volumes into containers. Check out our [documentation](http://cf-persist-service-broker.readthedocs.io/en/latest/) for more on that!
