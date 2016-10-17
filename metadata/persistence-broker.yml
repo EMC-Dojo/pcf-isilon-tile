@@ -193,7 +193,7 @@ job_types:
         - name: isilon
           id: 7d288d4f-4f0f-4ee5-a9ad-ea84057ab782
           bindable: true
-          description: "Support Isilon Arrays in Cloud Foundry"
+          description: "Support Isilon and Scaleio Arrays in Cloud Foundry"
           requires: ["volume_mount"]
           metadata:
             displayName: "Isilon"
