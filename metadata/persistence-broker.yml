@@ -14,7 +14,7 @@ stemcell_criteria:
 
 releases:
 - name: emc-persistence-release
-  file: emc-persistence-release-3.tgz
+  file: emc-persistence-release-5.tgz
   version: 'latest'
 - name: libstorage-release
   file: libstorage-release-3.tgz
