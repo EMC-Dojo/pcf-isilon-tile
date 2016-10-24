@@ -14,6 +14,9 @@ The service will provide volume mounts into an Isilon cluster for [persistent st
 ##How can I install it?
 A complete instruction guide to install the Isilon Tile on Pivotal Cloud Foundry is published [here](http://cf-persist-service-broker.readthedocs.io/en/latest/Configuring%20PCF%20for%20Isilon/).
 
+##Downloads
+- Releases: <https://github.com/EMC-Dojo/pcf-isilon-tile/releases>
+
 ##Resources
 
 - Documentation: <http://cf-persist-service-broker.readthedocs.io/>
